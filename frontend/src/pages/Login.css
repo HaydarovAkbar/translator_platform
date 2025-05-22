@@ -1,0 +1,90 @@
+.login-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  background: linear-gradient(120deg, #89f7fe 0%, #66a6ff 100%);
+}
+
+.login-form {
+  background-color: #ffffff;
+  padding: 40px;
+  border-radius: 16px;
+  box-shadow: 0 15px 35px rgba(0, 0, 0, 0.1);
+  width: 100%;
+  max-width: 400px;
+  text-align: center;
+}
+
+.login-form h2 {
+  margin-bottom: 20px;
+  color: #333;
+}
+
+.login-form input {
+  width: 100%;
+  padding: 12px 15px;
+  margin: 10px 0;
+  border: 1px solid #ddd;
+  border-radius: 10px;
+  font-size: 16px;
+  box-sizing: border-box;
+}
+
+.login-form input:focus {
+  border-color: #66a6ff;
+  outline: none;
+}
+
+.login-form button[type="submit"] {
+  width: 100%;
+  padding: 12px;
+  background-color: #66a6ff;
+  border: none;
+  color: white;
+  border-radius: 10px;
+  font-size: 16px;
+  cursor: pointer;
+  margin-top: 10px;
+  transition: background-color 0.3s ease;
+}
+
+.login-form button[type="submit"]:hover {
+  background-color: #558de8;
+}
+
+/* Parol va ko‘rsatish tugmasi o‘chirilmaydi */
+.password-wrapper {
+  position: relative;
+  margin: 10px 0;
+}
+
+.password-wrapper input {
+  padding-right: 45px; /* Tugma uchun joy */
+}
+
+.toggle-password {
+  position: absolute;
+  top: 50%;
+  right: 12px;
+  transform: translateY(-50%);
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-size: 20px;
+  color: #444;
+  padding: 0;
+}
+
+.toggle-password:hover {
+  color: #222;
+}
+
+.remember-me {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 14px;
+  margin: 10px 0;
+  justify-content: flex-start;
+}

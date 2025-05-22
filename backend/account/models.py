@@ -3,10 +3,50 @@ from django.db import models
 from django.contrib.auth.models import AbstractUser, Group, Permission
 from django.utils.translation import gettext_lazy as _
 from phonenumber_field.modelfields import PhoneNumberField
-
 import uuid
-
 from translation.models import Language
+
+
+# ===========================
+# Organization model
+# ===========================
+class OrganizationManager(models.Manager):
+    def get_queryset(self):
+        return super().get_queryset().filter(is_active=True)
+
+
+class Organization(models.Model):
+    title = models.CharField(max_length=250)
+    attr = models.CharField(max_length=250, null=True, blank=True)
+    inn = models.BigIntegerField(null=True, blank=True)
+    phone_number = PhoneNumberField(
+        _("Phone number"),
+        help_text=_("Required. Only international format used"),
+        error_messages={"unique": _("This phone number already exists.")},
+        unique=True,
+        blank=True,
+        null=True,
+    )
+    address = models.CharField(max_length=350, null=True, blank=True)
+    is_active = models.BooleanField(default=True)
+
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
+    objects = OrganizationManager()
+
+    def __str__(self):
+        return self.title
+
+    class Meta:
+        db_table = "organizations"
+        verbose_name = _("Tashkilot")
+        verbose_name_plural = _("Tashkilotlar")
+
+
+# class UserManager(models.Manager):
+#     def get_queryset(self):
+#         return super().get_queryset().filter(is_active=True)
 
 
 class User(AbstractUser):
@@ -23,6 +63,10 @@ class User(AbstractUser):
     updated_at = models.DateTimeField(auto_now=True, null=True)
 
     language = models.ForeignKey(Language, on_delete=models.SET_NULL, null=True)
+
+    organization = models.ForeignKey(Organization, on_delete=models.SET_NULL, null=True)
+
+    # objects = UserManager()
 
     uuid = models.UUIDField(default=uuid.uuid4, editable=False, unique=True)
 
