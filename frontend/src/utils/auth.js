@@ -2,7 +2,7 @@
 
 export function getUser() {
     try {
-        return JSON.parse(localStorage.getItem('user_info'));
+        return JSON.parse(localStorage.getItem('user_info')) || null;
     } catch {
         return null;
     }
@@ -14,10 +14,10 @@ export function getToken() {
 
 export function hasPermission(permission) {
     const user = getUser();
-    return user?.permissions.includes(permission);
+    return user?.permissions?.includes(permission);
 }
 
 export function hasRole(role) {
     const user = getUser();
-    return user?.groups.includes(role);
+    return user?.groups?.includes(role);
 }

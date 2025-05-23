@@ -5,7 +5,12 @@ from .serializers import (
     ApplicationSerializer, ApplicationCreateSerializer,
     ApplicationTargetSerializer, OrganizationSerializer, ApplicationResponseSerializer
 )
-from account.models import Organization
+
+from rest_framework.views import APIView
+from django.db.models import Count
+from django.utils import timezone
+from datetime import timedelta
+from account.models import Organization, User
 from rest_framework.permissions import IsAuthenticated
 
 
@@ -42,3 +47,33 @@ class OrganizationViewSet(viewsets.ReadOnlyModelViewSet):
     permission_classes = [IsAuthenticated]
     queryset = Organization.objects.all()
     serializer_class = OrganizationSerializer
+
+
+class DashboardStatsAPIView(APIView):
+    permission_classes = [IsAuthenticated]
+
+    def get(self, request):
+        total_apps = Application.objects.count()
+
+        status_counts = (
+            ApplicationTarget.objects
+            .values('status')
+            .annotate(count=Count('id'))
+        )
+
+        today = timezone.now().date()
+        week_ago = today - timedelta(days=6)
+
+        login_activity = (
+            User.objects.filter(last_login__date__gte=week_ago)
+            .extra(select={'day': "DATE(last_login)"})
+            .values('day')
+            .annotate(count=Count('id'))
+            .order_by('day')
+        )
+
+        return Response({
+            "total_applications": total_apps,
+            "status_distribution": list(status_counts),
+            "login_activity": list(login_activity),
+        })

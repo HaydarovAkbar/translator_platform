@@ -62,6 +62,8 @@ class User(AbstractUser):
     address = models.CharField(max_length=255, null=True, blank=True)
     updated_at = models.DateTimeField(auto_now=True, null=True)
 
+    pinfl = models.CharField(max_length=14, null=True, blank=True)
+
     language = models.ForeignKey(Language, on_delete=models.SET_NULL, null=True)
 
     organization = models.ForeignKey(Organization, on_delete=models.SET_NULL, null=True)

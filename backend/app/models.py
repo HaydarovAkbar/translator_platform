@@ -46,7 +46,6 @@ class ApplicationTarget(models.Model):
 
     STATUS_CHOICES = [
         ('sent', _('Yuborilgan')),
-        ('viewed', _('Ko‘rilgan')),
         ('in_progress', _('Ko‘rib chiqilmoqda')),
         ('done', _('Ko‘rib chiqilgan')),
     ]

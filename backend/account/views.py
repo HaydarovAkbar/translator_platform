@@ -31,6 +31,7 @@ class LoginApiView(TokenObtainPairView):
                 'full_name': f"{user.first_name} {user.last_name}",
                 'is_staff': user.is_staff,
                 'is_superuser': user.is_superuser,
+                'organization': user.organization.title if user.organization else None,
                 'uuid': str(user.uuid),
                 'groups': [group.name for group in user.groups.all()],
                 'permissions': [perm.codename for group in user.groups.all() for perm in group.permissions.all()]

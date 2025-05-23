@@ -88,3 +88,13 @@
   margin: 10px 0;
   justify-content: flex-start;
 }
+
+.error-message {
+  background-color: #ffe4e4;
+  border: 1px solid #ff6b6b;
+  color: #b00020;
+  padding: 10px;
+  border-radius: 8px;
+  margin-bottom: 15px;
+  font-size: 14px;
+}
