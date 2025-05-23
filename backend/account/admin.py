@@ -1,7 +1,7 @@
 from django.contrib import admin
 from django import forms
 from django.contrib.auth.forms import UserChangeForm as BaseUserChangeForm
-from .models import User
+from .models import User, Permission
 
 
 class CustomUserChangeForm(BaseUserChangeForm):
@@ -14,7 +14,8 @@ class CustomUserChangeForm(BaseUserChangeForm):
 
     class Meta:
         model = User
-        fields = ['username', 'first_name', 'last_name', 'email', 'phone_number', 'is_active', 'is_staff', 'groups', 'organization']
+        fields = ['username', 'first_name', 'last_name', 'email', 'phone_number', 'is_active', 'is_staff', 'groups',
+                  'organization']
 
     def clean_password(self):
         return self.cleaned_data.get("password", None)
@@ -44,3 +45,9 @@ class UserAdmin(admin.ModelAdmin):
     search_fields = ["username", "first_name", "last_name", "email"]
     list_filter = ["is_active", "is_staff", "groups"]
     list_per_page = 20
+
+
+@admin.register(Permission)
+class PermissionAdmin(admin.ModelAdmin):
+    list_display = ["codename", "name"]
+    search_fields = ["codename", "name"]

@@ -1,17 +1,19 @@
 from rest_framework import viewsets, permissions, status
 from rest_framework.response import Response
+from rest_framework.generics import ListAPIView
+from rest_framework.views import APIView
+from django.db.models import Count
+from django.utils import timezone
+from datetime import timedelta
+from rest_framework.permissions import IsAuthenticated
+
 from .models import Application, ApplicationTarget, ApplicationResponse
 from .serializers import (
     ApplicationSerializer, ApplicationCreateSerializer,
     ApplicationTargetSerializer, OrganizationSerializer, ApplicationResponseSerializer
 )
-
-from rest_framework.views import APIView
-from django.db.models import Count
-from django.utils import timezone
-from datetime import timedelta
+from .pagination import TenPagination
 from account.models import Organization, User
-from rest_framework.permissions import IsAuthenticated
 
 
 class ApplicationViewSet(viewsets.ModelViewSet):
@@ -77,3 +79,29 @@ class DashboardStatsAPIView(APIView):
             "status_distribution": list(status_counts),
             "login_activity": list(login_activity),
         })
+
+
+class ApplicationListAPIView(ListAPIView):
+    serializer_class = ApplicationSerializer
+    permission_classes = [IsAuthenticated]
+    pagination_class = TenPagination
+
+    def get_queryset(self):
+        user = self.request.user
+        qs = Application.objects.filter(is_active=True)
+
+        if user.is_superuser or user.is_staff:
+            return qs
+
+        return qs.filter(created_by=user)
+
+
+class ApplicationCreateAPIView(APIView):
+    permission_classes = [IsAuthenticated]
+
+    def post(self, request):
+        serializer = ApplicationCreateSerializer(data=request.data, context={'request': request})
+        if serializer.is_valid():
+            serializer.save()
+            return Response({'message': 'Hujjat muvaffaqiyatli yaratildi'}, status=status.HTTP_201_CREATED)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
